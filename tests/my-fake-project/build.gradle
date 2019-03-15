@@ -1,0 +1,24 @@
+apply from: 'https://raw.githubusercontent.com/upside-services/upside-gradle/master/upside-service.gradle'
+apply from: 'https://raw.githubusercontent.com/upside-services/upside-gradle/master/upside-whitesource.gradle'
+apply from: 'https://raw.githubusercontent.com/upside-services/upside-gradle/master/upside-autovalue.gradle'
+apply from: 'https://raw.githubusercontent.com/upside-services/upside-gradle/master/upside-jacoco.gradle'
+apply from: 'https://raw.githubusercontent.com/upside-services/upside-gradle/master/upside-jacoco-multimodule.gradle'
+apply from: 'https://raw.githubusercontent.com/upside-services/upside-gradle/master/upside-dependency-management.gradle'
+
+defaultTasks 'snapshot', 'test', 'build', 'publishToMavenLocal', 'jacocoTestReport', 'jacocoRootReport'
+
+allprojects {
+    apply plugin: 'idea'
+    group = 'com.upside.merchant'
+
+    dependencyManagement {
+        dependencies {
+        }
+    }
+    test {
+        testLogging {
+            events "passed", "skipped", "failed"
+            exceptionFormat "full"
+        }
+    }
+}

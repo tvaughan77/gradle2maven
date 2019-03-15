@@ -1,0 +1,6 @@
+description = 'merchant-service-api'
+dependencies {
+    compile group: 'com.upside.model', name: 'model-core'
+
+    testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind'
+}
