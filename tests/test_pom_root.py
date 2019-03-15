@@ -1,9 +1,7 @@
 import unittest
 from lxml import etree
-# import xml.etree.ElementTree as ET
 from pom_root import find_group_id, create_root_level_pom
 from tests import gradle_files
-from pprint import pprint
 
 
 class TestPomRoot(unittest.TestCase):

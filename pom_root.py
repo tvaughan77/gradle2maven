@@ -1,10 +1,8 @@
-from lxml import etree
-
-# import xml.etree.ElementTree as ET
-import re
-import logging
 import os
+import logging
+import re
 from g2m_util import load_file, get_root_level_gradle_file
+from lxml import etree
 
 logger = logging.getLogger()
 namespace = '{http://maven.apache.org/POM/4.0.0}'
@@ -65,9 +63,6 @@ def create_root_level_pom(artifact, artifact_version, gradle_files):
     root_gradle = get_root_level_gradle_file(gradle_files)
     group_id = find_group_id(root_gradle)
 
-    # etree.ElementTree.register_namespace('', 'http://maven.apache.org/POM/4.0.0')
-    # etree.ElementTree.register_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-    # pom = etree.ElementTree.fromstring(template)
     utf8_parser = etree.XMLParser(encoding='utf-8')
     pom = etree.fromstring(template, parser=utf8_parser)
     pom.find(f"{namespace}groupId").text = group_id
@@ -84,10 +79,6 @@ def create_root_level_pom(artifact, artifact_version, gradle_files):
             new_module = build_module(gradle_file)
             logging.debug(f"Adding new_module {new_module.text}")
             modules.append(new_module)
-
-    # my_tree = etree.ElementTree(pom)
-    # with open('/tmp/pom.xml', 'w') as f:
-    #     f.write(etree.tostring(my_tree, pretty_print=True))
 
     return pom
 
