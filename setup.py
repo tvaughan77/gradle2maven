@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
 
 requires =[
-    'click==7.0'
+    'click==7.0',
+    'lxml==4.3.2'
 ]
 
 setup_options = dict(

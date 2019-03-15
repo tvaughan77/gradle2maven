@@ -1,12 +1,16 @@
-import xml.etree.ElementTree as ET
+from lxml import etree
+
+# import xml.etree.ElementTree as ET
 import re
+import logging
+import os
 from g2m_util import load_file, get_root_level_gradle_file
 
+logger = logging.getLogger()
 namespace = '{http://maven.apache.org/POM/4.0.0}'
 scm_dev_cnx_root = 'scm:git:git@github.com:upside-services'
 
-template = """<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+template = """<project xmlns="http://maven.apache.org/POM/4.0.0" 
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -58,18 +62,51 @@ def create_root_level_pom(artifact, artifact_version, gradle_files):
     :return: An Element containing content appropriate for a project's
     root-level pom.xml file
     """
-    group_id = find_group_id(get_root_level_gradle_file(gradle_files))
+    root_gradle = get_root_level_gradle_file(gradle_files)
+    group_id = find_group_id(root_gradle)
 
-    ET.register_namespace('', 'http://maven.apache.org/POM/4.0.0')
-    ET.register_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-    pom = ET.fromstring(template)
+    # etree.ElementTree.register_namespace('', 'http://maven.apache.org/POM/4.0.0')
+    # etree.ElementTree.register_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+    # pom = etree.ElementTree.fromstring(template)
+    utf8_parser = etree.XMLParser(encoding='utf-8')
+    pom = etree.fromstring(template, parser=utf8_parser)
     pom.find(f"{namespace}groupId").text = group_id
     pom.find(f"{namespace}artifactId").text = artifact
     pom.find(f"{namespace}version").text = artifact_version
     pom.find(f"{namespace}name").text = artifact
     pom.find(f"{namespace}description").text = artifact
     pom.find(f"{namespace}scm/{namespace}developerConnection").text = f"{scm_dev_cnx_root}/{artifact}.git"
+
+    modules = pom.find(f"{namespace}modules")
+    list.sort(gradle_files)
+    for gradle_file in gradle_files:
+        if not root_gradle == gradle_file:
+            new_module = build_module(gradle_file)
+            logging.debug(f"Adding new_module {new_module.text}")
+            modules.append(new_module)
+
+    # my_tree = etree.ElementTree(pom)
+    # with open('/tmp/pom.xml', 'w') as f:
+    #     f.write(etree.tostring(my_tree, pretty_print=True))
+
     return pom
+
+
+def build_module(path_file_tuple):
+    """
+    Assumes the name of a module is the same as the subdirectory beneath which it's stored
+    :param path_file_tuple: A (path, file) tuple
+    :return: The "last part" of the path, expressed as an XML Element suitable for inclusion
+    in a list of <modules>...</modules>
+    """
+    module = etree.Element('module')
+
+    print(f"path_file_tuple is {path_file_tuple[0]} and {path_file_tuple[1]}")
+    submodule_name = os.path.split(path_file_tuple[0])
+    print(f"submodule name is '{submodule_name[1]}'")
+    module.text = submodule_name[1]
+
+    return module
 
 
 def find_group_id(path_file_tuple):
