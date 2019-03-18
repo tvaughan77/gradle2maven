@@ -21,6 +21,13 @@ It will product new `pom.xml` files everywhere a build.gradle file exists with t
 * any special plugin or non-dependency-management related gradle section is ignored; you'll need to find the 
 maven equivalent and wire it up manually
 
+### Dumpster Fire Formatting
+
+This (currently) produces godawful single-line `<depdency>` blocks in the resulting pom.xmls.  I've found it easier
+to just do a "Command+Option+L" in IntelliJ to format all the poms correctly than battle the 3 different XML
+libraries everyone recommends one use to prettyprint XML in Python.  I'm seriously shocked how hard it is to just
+get a well-formatted XML document saved to a file in this oh-so-beloved language.  Must by PEBKAU.
+
 ### Adding dependencies
 1. After adding the dependency to requirements-to-freeze.txt,
 ```
