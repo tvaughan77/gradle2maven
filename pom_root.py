@@ -6,6 +6,7 @@ from lxml import etree
 logger = logging.getLogger()
 scm_dev_cnx_root = 'scm:git:git@github.com:upside-services'
 
+# CHANGE THIS TEMPLATE'S PARENTS FOR YOUR SPECIFIC PURPOSES
 template = """<project xmlns="http://maven.apache.org/POM/4.0.0" 
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -14,7 +15,7 @@ template = """<project xmlns="http://maven.apache.org/POM/4.0.0"
     <parent>
         <groupId>com.upside</groupId>
         <artifactId>upside-service-pom</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.0</version>
     </parent>
 
     <groupId>com.upside.xxx</groupId>
