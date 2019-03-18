@@ -1,6 +1,8 @@
 description = 'merchant-service-api'
 dependencies {
+    compile project(':foo-project')
     compile group: 'com.upside.model', name: 'model-core'
 
     testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind'
+    testCompile group: 'com.something', name: 'my-artifact', version:'1.2.3'
 }

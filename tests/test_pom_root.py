@@ -1,7 +1,9 @@
 import unittest
+
 from lxml import etree
 from pom_root import find_group_id, create_root_level_pom
 from tests import gradle_files
+from xml.dom.minidom import parseString
 
 
 class TestPomRoot(unittest.TestCase):
@@ -11,17 +13,21 @@ class TestPomRoot(unittest.TestCase):
         self.assertEqual('com.upside.merchant', find_group_id(root_build_gradle))
 
     def test_create_root_level_pom(self):
-        pom = create_root_level_pom('myartifact', '1.0.0', gradle_files)
+        pom = create_root_level_pom('com.upside.merchant', 'myartifact', '1.0.0', gradle_files)
         actual_string = etree.tostring(pom, pretty_print=True)
-        with open('/tmp/actual.xml', 'wb') as f:
-            f.write(actual_string)
+        # self.write_pom(pom, '/tmp/actual.xml')
 
         expected = etree.fromstring(EXPECTED_POM)
         expected_string = etree.tostring(expected, pretty_print=True)
-        with open('/tmp/expected.xml', 'wb') as f:
-            f.write(expected_string)
+        self.write_pom(expected, '/tmp/expected.xml')
 
         self.assertEqual(expected_string, actual_string)
+
+    @staticmethod
+    def write_pom(element, filename):
+        pom_string = parseString(etree.tostring(element))
+        with open(filename, 'w') as f:
+            f.write(pom_string.toprettyxml())
 
 
 EXPECTED_POM = """<project xmlns="http://maven.apache.org/POM/4.0.0" 

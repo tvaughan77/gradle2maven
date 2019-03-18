@@ -4,7 +4,11 @@ import logging
 import os
 import os.path
 
-from pom_root import create_root_level_pom
+from g2m_util import get_root_level_gradle_file, write_pom
+from lxml import etree as ET
+from pom_root import create_root_level_pom, find_group_id
+from pom_submodule import create_submodule_pom, derive_submodule_pom_filename
+from xml.dom.minidom import parseString
 
 log_handler = logging.StreamHandler()
 logger = logging.getLogger()
@@ -32,18 +36,28 @@ def find_gradle_files(root_path):
 @click.option('--artifact', '-a')
 @click.option('--artifactversion', '-v')
 def main(artifact, artifactversion):
-    gradle_files = find_gradle_files(".")
-
-    create_root_level_pom(artifact, artifactversion, gradle_files)
-    for gf in gradle_files:
-        click.echo(f"{gf}")
-
     # get list of build.gradle files and paths relative to here
+    # extract the groupId from the root-level build.gradle
     # create root-level pom as a one off
     # for each sub project build.gradle file:
     #   parse each dependency line into either a default or test dependency
     #   create a sub project pom.xml
     #   write out the maven dependencies
+
+    gradle_files = find_gradle_files(".")
+
+    root_level_gradle_file = get_root_level_gradle_file(gradle_files)
+    group_id = find_group_id(root_level_gradle_file)
+
+    root_pom = create_root_level_pom(group_id, artifact, artifactversion, gradle_files)
+    write_pom(root_pom, './pom.xml')
+
+    for gradle_file in gradle_files:
+        if not gradle_file == root_level_gradle_file:
+            submodule_pom = create_submodule_pom(group_id, artifact, artifactversion, gradle_file)
+            write_pom(submodule_pom, derive_submodule_pom_filename(gradle_file))
+
+
 
 
 

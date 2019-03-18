@@ -1,11 +1,9 @@
-import os
 import logging
 import re
-from g2m_util import load_file, get_root_level_gradle_file
+from g2m_util import load_file, get_root_level_gradle_file, namespace, get_module_element
 from lxml import etree
 
 logger = logging.getLogger()
-namespace = '{http://maven.apache.org/POM/4.0.0}'
 scm_dev_cnx_root = 'scm:git:git@github.com:upside-services'
 
 template = """<project xmlns="http://maven.apache.org/POM/4.0.0" 
@@ -50,18 +48,18 @@ template = """<project xmlns="http://maven.apache.org/POM/4.0.0"
 """
 
 
-def create_root_level_pom(artifact, artifact_version, gradle_files):
+def create_root_level_pom(group_id, artifact, artifact_version, gradle_files):
     """
+    :param group_id the group_id of the artifact
     :param artifact the name of the artifact, which will also be used
     as the 'name' and 'description' tags in the returned pom
     :param artifact_version the version of the artfiact
     :param gradle_files: An array of tuples (see find_gradle_files) with
     information about which submodules our root-level pom should specify
-    :return: An Element containing content appropriate for a project's
+    :return: An lxml Element containing content appropriate for a project's
     root-level pom.xml file
     """
     root_gradle = get_root_level_gradle_file(gradle_files)
-    group_id = find_group_id(root_gradle)
 
     utf8_parser = etree.XMLParser(encoding='utf-8')
     pom = etree.fromstring(template, parser=utf8_parser)
@@ -76,28 +74,11 @@ def create_root_level_pom(artifact, artifact_version, gradle_files):
     list.sort(gradle_files)
     for gradle_file in gradle_files:
         if not root_gradle == gradle_file:
-            new_module = build_module(gradle_file)
+            new_module = get_module_element(gradle_file)
             logging.debug(f"Adding new_module {new_module.text}")
             modules.append(new_module)
 
     return pom
-
-
-def build_module(path_file_tuple):
-    """
-    Assumes the name of a module is the same as the subdirectory beneath which it's stored
-    :param path_file_tuple: A (path, file) tuple
-    :return: The "last part" of the path, expressed as an XML Element suitable for inclusion
-    in a list of <modules>...</modules>
-    """
-    module = etree.Element('module')
-
-    print(f"path_file_tuple is {path_file_tuple[0]} and {path_file_tuple[1]}")
-    submodule_name = os.path.split(path_file_tuple[0])
-    print(f"submodule name is '{submodule_name[1]}'")
-    module.text = submodule_name[1]
-
-    return module
 
 
 def find_group_id(path_file_tuple):

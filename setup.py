@@ -7,13 +7,13 @@ requires =[
 
 setup_options = dict(
     name='g2m',
-    version='1.0.8',
+    version='1.0.12',
     packages=find_packages(exclude=['tests*']),
     url='https://github.com/tvaughan77/gradle2maven',
     license='',
     author='tvaughan',
     author_email='',
-    py_modules=['g2m', 'g2m_util', 'pom_root'],
+    py_modules=['g2m', 'g2m_util', 'pom_root', 'pom_submodule'],
     install_requires=requires,
     description='Converts gradle to maven',
     entry_points='''
