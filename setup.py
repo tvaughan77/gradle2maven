@@ -7,7 +7,7 @@ requires =[
 
 setup_options = dict(
     name='g2m',
-    version='1.0.13',
+    version='1.1.0',
     packages=find_packages(exclude=['tests*']),
     url='https://github.com/tvaughan77/gradle2maven',
     license='',

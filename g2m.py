@@ -33,8 +33,8 @@ def find_gradle_files(root_path):
 
 
 @click.command()
-@click.option('--artifact', '-a')
-@click.option('--artifactversion', '-v')
+@click.option('--artifact', '-a', prompt='The maven artifactId (e.g. echo-service)')
+@click.option('--artifactversion', '-v', prompt='The artifact version (e.g. 1.0.0-SNAPSHOT)')
 def main(artifact, artifactversion):
     # get list of build.gradle files and paths relative to here
     # extract the groupId from the root-level build.gradle
