@@ -15,7 +15,7 @@ template = """<project xmlns="http://maven.apache.org/POM/4.0.0"
     <parent>
         <groupId>com.upside</groupId>
         <artifactId>upside-service-pom</artifactId>
-        <version>1.2.0</version>
+        <version>1.2.1</version>
     </parent>
 
     <groupId>com.upside.xxx</groupId>
