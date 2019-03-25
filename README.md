@@ -20,7 +20,7 @@ my-service/
         build.gradle
 ```
 
-It will product new `pom.xml` files everywhere a build.gradle file exists with the following rules:
+It will produce new `pom.xml` files everywhere a build.gradle file exists with the following rules:
 
 * the root-level build.gradle is a one-off and needs to manually curated, but will include the `<modules>...` stanza
 * each sub project will point to the root level pom as its parent
