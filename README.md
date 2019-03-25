@@ -1,6 +1,12 @@
 # gradle2maven
 Converts a multi-gradle project to a bunch o' poms
 
+Usage:
+```
+g2m -a <top level artifact name> -v <top level artifact version>
+```
+
+
 ## Assumptions
 
 This script assumes a multi-module gradle project like:
